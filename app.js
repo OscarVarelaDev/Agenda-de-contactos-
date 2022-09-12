@@ -147,7 +147,6 @@ btnMostrarContactos.addEventListener("click", () => {
 
 btnCerrar.addEventListener("click", (e) => {
     swal("Gracias por usar nuestra app")
-    e.preventDefault()
     localStorage.clear()
 
 });
