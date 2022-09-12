@@ -1,3 +1,4 @@
+
 const btnagregarContacto = document.getElementById("btnAgregarContacto");
 const btnbuscarContacto = document.getElementById("btnbuscarContactos");
 const btnMostrarContactos = document.getElementById("btnMostrarContactos");
@@ -8,6 +9,69 @@ const formMostrar = document.getElementById("showContacts");
 const guardarContacto = document.getElementById("agregarNuevo")
 const cancelarGuardarContacto = document.getElementById("cancelarContacto")
 
+btnbuscarContacto.addEventListener("click", () => {
+    formBuscar.style.display = "block";
+    formBuscar.style.visibility = "visible";
+    formMostrar.style.visibility = "hidden";
+    formAdd.style.visibility = "hidden";
+    formAdd.style.display = "none";
+    formMostrar.style.display = "none";
+    const enviarBusqueda = document.getElementById("enviarBuscar")
+    formBuscar.style.display = "block";
+    formAdd.style.display = "none";
+    formMostrar.style.display = "none";
+    const contactos = JSON.parse(localStorage.getItem("contactos"));
+    console.log(contactos)
+    enviarBusqueda.addEventListener("click", (e) => {
+        const busqueda = document.getElementById("busqueda").value
+        e.preventDefault(e);
+
+let valorbusqueda=  busqueda.split("")[0].toUpperCase() + busqueda.split("").slice(1).join("").toLowerCase() 
+
+
+   console.log(valorbusqueda)
+        let busquedaContactos = [];
+        for (let i = 0; i < contactos.length; i++) {
+            if (valorbusqueda == contactos[i].nombre) {
+                e.preventDefault(e);
+                busquedaContactos.push(contactos[i])
+                formBuscar.style.display = "block";
+                formBuscar.style.visibility = "visible";
+                formMostrar.style.visibility = "visible";
+                formMostrar.style.display = "block";
+
+                let table = document.getElementById("table")
+                table.innerHTML = ""
+
+                table.innerHTML += `
+                <tr>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Email</th>
+                </tr>
+               `
+                for (let i = 0; i < busquedaContactos.length; i++) {
+                    table.innerHTML += `
+            <tr>
+            <td>${busquedaContactos[i].nombre}</td>
+            <td>${busquedaContactos[i].telefono}</td>
+            <td>${busquedaContactos[i].email}</td>
+              </tr>
+            `  
+
+                    
+                }  return  ;
+              
+
+            } 
+           
+
+        } 
+            swal("No se encontro alguna coincidencia", "", "warning");
+            e.preventDefault(e);
+        
+    });
+});
 
 const mostrarMenu = () => {
     formMostrar.style.display = "none";
@@ -17,16 +81,6 @@ const mostrarMenu = () => {
 }
 
 mostrarMenu();
-
-
-btnbuscarContacto.addEventListener("click", () => {
-    formBuscar.style.display = "block";
-    formBuscar.style.visibility = "visible";
-    formMostrar.style.visibility = "hidden";
-    formAdd.style.visibility = "hidden";
-    formAdd.style.display = "none";
-    formMostrar.style.display = "none";
-});
 
 
 
@@ -54,11 +108,20 @@ btnagregarContacto.addEventListener('click', () => {
 
         } if (contactos == null) {
             contactos = []
-        } contactos.push({ nombre, telefono, email })
-        localStorage.setItem("contactos", JSON.stringify(contactos))
-        console.log(contactos)
+        }
+        contactos.push({ nombre: nombre, telefono: telefono, email: email })
+            for(let i = 0; i < contactos.length; i++){
+              let name= contactos[i].nombre[0].toUpperCase() + contactos[i].nombre.slice(1)
+                contactos[i].nombre=name
+
+            } 
+            localStorage.setItem("contactos", JSON.stringify(contactos))
+                console.log(contactos)
         swal("Contacto agregado")
-        e.preventDefault();
+        e.preventDefault()
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     })
 
 });
@@ -86,12 +149,6 @@ cancelarGuardarContacto.addEventListener("click", (e) => {
         });
 
 });
-
-
-
-
-
-
 
 
 btnMostrarContactos.addEventListener("click", () => {
@@ -142,11 +199,15 @@ btnMostrarContactos.addEventListener("click", () => {
 
 
     }
-})
+});
 
 
 btnCerrar.addEventListener("click", (e) => {
-    swal("Gracias por usar nuestra app")
+    swal("Gracias por usar nuestra app", "Cerrando sesion","success")
     localStorage.clear()
+    setTimeout(() => {
 
-});
+        location.reload();
+    }, 750);
+})
+;
